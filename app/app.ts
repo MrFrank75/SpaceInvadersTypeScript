@@ -1,7 +1,3 @@
-function startGame(){
-    var messageElement = document.getElementById('messages');
-    messageElement!.innerText = "Welcome to MultiMath! We are starting a new game...."
-}
 
 function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) {
  
@@ -54,5 +50,4 @@ function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
     outerSpace.appendChild(iDiv);
 }
 
-document.getElementById('startGame')?.addEventListener('click', startGame);
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
