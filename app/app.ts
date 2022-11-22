@@ -42,12 +42,14 @@ function keyDownHandler(event: KeyboardEvent) {
 
 
 function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
-    let iDiv : HTMLDivElement = document.createElement('div');
-    iDiv.className = 'bullet';
-    iDiv.style.left = spaceCraft.style.left;
-    iDiv.style.top = spaceCraft.style.top;
-    
-    outerSpace.appendChild(iDiv);
+    let scWidth : number = spaceCraft.offsetWidth; 
+    let bullet : HTMLDivElement = document.createElement('div');
+
+    bullet.className = 'bullet';
+    bullet.style.left = (spaceCraft.offsetLeft+(scWidth/2)).toString();
+    bullet.style.top = spaceCraft.style.top;
+
+    outerSpace.appendChild(bullet);
 }
 
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
