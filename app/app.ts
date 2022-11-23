@@ -1,9 +1,4 @@
 
-
-const aBulletWorker = new Worker('../workers/bulletWorker.js');
-var aBullet : HTMLDivElement;
-
-
 function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) {
  
     if (event.code === "ArrowLeft") {
@@ -48,21 +43,47 @@ function keyDownHandler(event: KeyboardEvent) {
 
 function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
     let scWidth : number = spaceCraft.offsetWidth; 
-    aBullet = document.createElement('div');
+    let aBullet = document.createElement('div');
 
     aBullet.className = 'bullet';
     aBullet.style.left = (spaceCraft.offsetLeft+(scWidth/2)).toString();
     aBullet.style.top = spaceCraft.style.top;
     outerSpace.appendChild(aBullet);
 
-    aBulletWorker.postMessage([aBullet.style.top.replace("px", "")]);
-    console.log('Message posted to worker');
+    let bulletObject = new Bullet(aBullet);
+    bulletObject.shoot()
 }
 
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
 
 
-aBulletWorker.onmessage = (e : MessageEvent  ) => {
-    aBullet.style.top = e.data;
-}
 
+class Bullet {
+    private graphicElement: HTMLDivElement;
+    private moveTimer : NodeJS.Timer | undefined;
+   
+    constructor(divElement: HTMLDivElement) {
+      this.graphicElement = divElement;
+    }
+   
+    shoot() {
+        let bulletSlowness = 50; //the higher the slower
+        this.moveTimer = setInterval(this.moveBullet,bulletSlowness, this.graphicElement, this);
+    }
+
+    private removeBullet(){
+        clearInterval(this.moveTimer);
+    }
+
+    private moveBullet(bullet : HTMLDivElement, refToBullet : Bullet){
+        let bulletPosition : number = bullet.offsetTop;
+        console.log('keeps going');
+        if (bulletPosition>0){
+            bulletPosition-=10;
+            bullet.style.top = bulletPosition.toString();
+        }
+        else
+            refToBullet.removeBullet();
+    } 
+
+  }
