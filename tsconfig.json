@@ -102,6 +102,6 @@
     "watch": true
   },
   "files": [
-    "./app/app.ts"
+    "./app/app.ts",
   ]
 }

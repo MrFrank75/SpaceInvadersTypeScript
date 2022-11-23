@@ -1,4 +1,9 @@
 
+
+const aBulletWorker = new Worker('../workers/bulletWorker.js');
+var aBullet : HTMLDivElement;
+
+
 function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) {
  
     if (event.code === "ArrowLeft") {
@@ -35,21 +40,29 @@ function keyDownHandler(event: KeyboardEvent) {
         event.code === "ArrowRight")
         moveSpaceCraft(event, spaceCraft);
 
-    if (event.code === "Space")
+    if (event.code === "Space"){
         shoot(outerSpace, spaceCraft);    
-
+    }
 }
 
 
 function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
     let scWidth : number = spaceCraft.offsetWidth; 
-    let bullet : HTMLDivElement = document.createElement('div');
+    aBullet = document.createElement('div');
 
-    bullet.className = 'bullet';
-    bullet.style.left = (spaceCraft.offsetLeft+(scWidth/2)).toString();
-    bullet.style.top = spaceCraft.style.top;
+    aBullet.className = 'bullet';
+    aBullet.style.left = (spaceCraft.offsetLeft+(scWidth/2)).toString();
+    aBullet.style.top = spaceCraft.style.top;
+    outerSpace.appendChild(aBullet);
 
-    outerSpace.appendChild(bullet);
+    aBulletWorker.postMessage([aBullet.style.top.replace("px", "")]);
+    console.log('Message posted to worker');
 }
 
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
+
+
+aBulletWorker.onmessage = (e : MessageEvent  ) => {
+    aBullet.style.top = e.data;
+}
+
