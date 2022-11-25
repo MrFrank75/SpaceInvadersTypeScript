@@ -4,6 +4,8 @@ class Alien {
     private outerSpaceWidth : number;
     private outerSpaceHeight : number;
 
+    private readonly AlienCssClass = 'alien';
+
     constructor() {
         this.outerSpaceHeight = 0;
         this.outerSpaceWidth = 0;
@@ -35,17 +37,22 @@ class Alien {
     } 
 
     private createAlienDivElement(outerSpace : HTMLElement) : HTMLDivElement {
-        let scWidth : number = outerSpace.offsetWidth; 
-    
+        
         let alienDiv = outerSpace.ownerDocument.createElement('div');
-        alienDiv.className = 'alien';
+        alienDiv.className = this.AlienCssClass;
 
-        alienDiv.style.left = (outerSpace.offsetLeft+(scWidth/2)).toString();
+        let initialLeftPos = this.getRandomInt(outerSpace.clientWidth);
+
+        alienDiv.style.left = initialLeftPos.toString();
         alienDiv.style.top = outerSpace.style.top;
  
         outerSpace.append(alienDiv);
         return alienDiv;
     }
+
+    private getRandomInt(max : number) : number {
+        return Math.floor(Math.random() * max);
+      }
 
 }
 

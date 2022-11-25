@@ -1,105 +1,51 @@
 /// <reference path="Alien.ts" />
+/// <reference path="Spacecraft.ts" />
+/// <reference path="Bullet.ts" />
 
-function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) : void {
- 
-    if (event.code === "ArrowLeft") {
-        let posWithoutPx: string = spaceCraft.style.left.replace("px", "");
-        let pos: number = +posWithoutPx - 3;
-        spaceCraft.style.left = pos.toString();
-    }
-    if (event.code === "ArrowRight") {
-        let posWithoutPx: string = spaceCraft.style.left.replace("px", "");
-        let pos: number = +posWithoutPx + 3;
-        spaceCraft.style.left = pos.toString();
-    }
-    if (event.code === "ArrowUp") {
-        let posWithoutPx: string = spaceCraft.style.top.replace("px", "");
-        let pos: number = +posWithoutPx - 3;
-        spaceCraft.style.top = pos.toString();
-    }
-    if (event.code === "ArrowDown") {
-        let posWithoutPx: string = spaceCraft.style.top.replace("px", "");
-        let pos: number = +posWithoutPx + 3;
-        spaceCraft.style.top = pos.toString();
-    }
-}
-
-
+var _spaceCraft = new Spacecraft();
+var alienGeneratorTimer : NodeJS.Timer | undefined;
+    
 function keyDownHandler(event: KeyboardEvent) : void {
     console.log(event.code);
-    let spaceCraft: HTMLDivElement = document.getElementById('spacecraft') as HTMLDivElement;
-    let outerSpace: HTMLDivElement = document.getElementById('outerSpace') as HTMLDivElement;
+ //   let outerSpace: HTMLDivElement = document.getElementById('outerSpace') as HTMLDivElement;
 
     if (event.code === "ArrowUp" ||
         event.code === "ArrowDown" ||
         event.code === "ArrowLeft" ||
-        event.code === "ArrowRight")
-        moveSpaceCraft(event, spaceCraft);
-
+        event.code === "ArrowRight"){
+            _spaceCraft.moveit(event);
+        }
+ 
     if (event.code === "Space"){
-        shoot(outerSpace, spaceCraft);    
+        let outerSpace : HTMLDivElement | null = document.getElementById('outerSpace') as HTMLDivElement;
+        if (outerSpace == undefined)
+            return;
+        _spaceCraft.shoot(outerSpace);
     }
-}
-
-
-function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) : void {
-    let scWidth : number = spaceCraft.offsetWidth; 
-    let aBullet = document.createElement('div');
-
-    aBullet.className = 'bullet';
-    aBullet.style.left = (spaceCraft.offsetLeft+(scWidth/2)).toString();
-    aBullet.style.top = spaceCraft.style.top;
-    outerSpace.appendChild(aBullet);
-
-    let bulletObject = new Bullet(aBullet);
-    bulletObject.shoot()
 }
 
 function startGame() {
     //add an alien
-    let outerSpace : HTMLElement | null = document.getElementById('outerSpace');
+    let outerSpace : HTMLDivElement | null = document.getElementById('outerSpace') as HTMLDivElement;
     if (outerSpace == undefined)
         return;
 
+    _spaceCraft.fly(outerSpace);
+
+    //aliens generation
+    setInterval(generateAlien, 2000, outerSpace);
+}
+
+function generateAlien(outerSpace : HTMLDivElement){
     let alien = new Alien();
     alien.invade(outerSpace);
 }
-
-
 
 
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
 startGame()
 
 
-class Bullet {
-    private graphicElement: HTMLDivElement;
-    private moveTimer : NodeJS.Timer | undefined;
-   
-    constructor(divElement: HTMLDivElement) {
-      this.graphicElement = divElement;
-    }
-   
-    shoot() {
-        let bulletSlowness = 50; //the higher the slower
-        this.moveTimer = setInterval(this.moveBullet,bulletSlowness, this.graphicElement, this);
-    }
 
-    private removeBullet(){
-        clearInterval(this.moveTimer);
-    }
-
-    private moveBullet(bullet : HTMLDivElement, refToBullet : Bullet){
-        let bulletPosition : number = bullet.offsetTop;
-        console.log('keeps going');
-        if (bulletPosition>0){
-            bulletPosition-=10;
-            bullet.style.top = bulletPosition.toString();
-        }
-        else
-            refToBullet.removeBullet();
-    } 
-
-  }
 
 
