@@ -1,5 +1,6 @@
+/// <reference path="Alien.ts" />
 
-function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) {
+function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) : void {
  
     if (event.code === "ArrowLeft") {
         let posWithoutPx: string = spaceCraft.style.left.replace("px", "");
@@ -24,7 +25,7 @@ function moveSpaceCraft(event : KeyboardEvent, spaceCraft : HTMLDivElement) {
 }
 
 
-function keyDownHandler(event: KeyboardEvent) {
+function keyDownHandler(event: KeyboardEvent) : void {
     console.log(event.code);
     let spaceCraft: HTMLDivElement = document.getElementById('spacecraft') as HTMLDivElement;
     let outerSpace: HTMLDivElement = document.getElementById('outerSpace') as HTMLDivElement;
@@ -41,7 +42,7 @@ function keyDownHandler(event: KeyboardEvent) {
 }
 
 
-function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
+function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) : void {
     let scWidth : number = spaceCraft.offsetWidth; 
     let aBullet = document.createElement('div');
 
@@ -54,8 +55,21 @@ function shoot(outerSpace : HTMLDivElement, spaceCraft : HTMLDivElement) {
     bulletObject.shoot()
 }
 
-document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
+function startGame() {
+    //add an alien
+    let outerSpace : HTMLElement | null = document.getElementById('outerSpace');
+    if (outerSpace == undefined)
+        return;
 
+    let alien = new Alien();
+    alien.invade(outerSpace);
+}
+
+
+
+
+document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
+startGame()
 
 
 class Bullet {
@@ -87,3 +101,5 @@ class Bullet {
     } 
 
   }
+
+
