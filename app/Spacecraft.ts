@@ -22,7 +22,7 @@ class Spacecraft {
         spacecraftDiv.className = this.SpacecraftCssClass;
 
         spacecraftDiv.style.left = (outerSpace.offsetLeft+(scWidth/2)).toString();
-        spacecraftDiv.style.top = "400px";
+        spacecraftDiv.style.top = "600px";
  
         outerSpace.append(spacecraftDiv);
         return spacecraftDiv;
@@ -60,10 +60,10 @@ class Spacecraft {
         }
     }
 
-    public shoot (outerSpace : HTMLDivElement)  {
+    public shoot (outerSpace : HTMLDivElement) : Bullet | undefined {
 
             if (this.graphicElement==undefined)
-                return;
+                return undefined;
 
             let scWidth : number = this.graphicElement?.offsetWidth as number; 
             let leftPos : number = (this.graphicElement.offsetLeft+(scWidth/2));
@@ -71,5 +71,7 @@ class Spacecraft {
         
             let bulletObject = new Bullet(outerSpace, leftPos, topPos);
             bulletObject.shoot();
+
+            return bulletObject;
     }
   }
