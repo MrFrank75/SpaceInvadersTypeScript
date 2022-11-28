@@ -5,10 +5,26 @@ class Alien {
     private outerSpaceHeight : number;
 
     private readonly AlienCssClass = 'alien';
+    
+    private _topPosition : number;
+    private _leftPosition : number;
+
+    private readonly MOVEMENT_SIZE_PX = 10;
+    private readonly MOVEMENT_FREQUENCY_MS = 2000;
+
+    public get topPosition() : number {
+        return this._topPosition;
+    }
+
+    public get leftPosition() : number {
+        return this._leftPosition;
+    }
 
     constructor() {
         this.outerSpaceHeight = 0;
         this.outerSpaceWidth = 0;
+        this._topPosition = 0
+        this._leftPosition = 0;
     }
    
     invade(outerSpace : HTMLElement) {
@@ -16,7 +32,7 @@ class Alien {
         this.outerSpaceHeight = outerSpace.clientHeight;
         this.outerSpaceWidth = outerSpace.clientWidth;
         
-        let alienSlowness = 500; //the higher the slower
+        let alienSlowness = this.MOVEMENT_FREQUENCY_MS; //the higher the slower
         this.moveTimer = setInterval(this.moveAlien,alienSlowness, this.graphicElement, this);
     }
 
@@ -29,7 +45,7 @@ class Alien {
         let alienPosition : number = alien.offsetTop;
         console.log('Moving alien');
         if (alienPosition<refToAlien.outerSpaceHeight){
-            alienPosition+=10;
+            alienPosition+=refToAlien.MOVEMENT_SIZE_PX;
             alien.style.top = alienPosition.toString();
         }
         else

@@ -5,7 +5,7 @@
 
 var _spaceCraft = new Spacecraft();
 var _alienGeneratorTimer : NodeJS.Timer | undefined;
-var _collisionMonitor = new CollisionMonitor();
+var _collisionMonitor : CollisionMonitor;
     
 function keyDownHandler(event: KeyboardEvent) : void {
     console.log(event.code);
@@ -40,11 +40,13 @@ function startGame() {
     _spaceCraft.fly(outerSpace);
 
     //start the collision monitor
+    _collisionMonitor = new CollisionMonitor(outerSpace.clientWidth, outerSpace.clientHeight);
     _collisionMonitor.addSpaceCraftMonitor(_spaceCraft);
     _collisionMonitor.start();
 
     //start the aliens generation
-    setInterval(generateAlien, 2000, outerSpace);
+    generateAlien(outerSpace);
+    //setInterval(generateAlien, 2000, outerSpace);
 }
 
 function generateAlien(outerSpace : HTMLDivElement){
