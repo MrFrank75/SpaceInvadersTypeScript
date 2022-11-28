@@ -31,17 +31,26 @@ class Bullet {
         clearInterval(this.moveTimer);
     }
 
+    private updatePosition(prevX : number, newX: number, prevY : number, newY : number){
+        this._collisionMonitor.updateBulletPosition(prevX,newX, prevY, newY);
+    }
+
     private moveBullet(bullet : HTMLDivElement, refToBullet : Bullet){
-        // let bulletPosition : number = bullet.offsetTop;
-        // let prevTop = bullet.offsetTop;
-        // let prevLeft = 
-        // if (bulletPosition>0){
-        //     bulletPosition-=10;
-        //     bullet.style.top = bulletPosition.toString();
-        //     refToBullet._collisionMonitor.updateBulletPosition(bulletPosition,bullet.offsetLeft)
-        // }
-        // else
-        //     refToBullet.removeBullet();
+        let prevPosY = bullet.offsetTop;
+        let prevPosX = bullet.offsetLeft;
+
+        let newPosY : number = 0;
+        let newPosX : number = 0;
+        
+        if (prevPosY>0){
+             newPosY = prevPosY -10;
+             newPosX = prevPosX;
+             bullet.style.top = newPosY.toString();
+             bullet.style.left = newPosX.toString();
+             refToBullet.updatePosition(prevPosX,newPosX,prevPosY,newPosY);
+         }
+         else
+             refToBullet.removeBullet();
     } 
 
   }

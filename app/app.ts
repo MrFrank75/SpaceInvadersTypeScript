@@ -2,6 +2,7 @@
 /// <reference path="Spacecraft.ts" />
 /// <reference path="Bullet.ts" />
 /// <reference path="CollisionMonitor.ts" />
+/// <reference path="CollisionTable.ts" />
 
 var _spaceCraft = new Spacecraft();
 var _alienGeneratorTimer : NodeJS.Timer | undefined;
@@ -22,11 +23,9 @@ function keyDownHandler(event: KeyboardEvent) : void {
         let outerSpace : HTMLDivElement | null = document.getElementById('outerSpace') as HTMLDivElement;
         if (outerSpace == undefined)
             return;
-        let bullet : Bullet | undefined =_spaceCraft.shoot(outerSpace);
+        let bullet : Bullet | undefined =_spaceCraft.shoot(outerSpace, _collisionMonitor);
         if (bullet == undefined)
             return;
-
-        _collisionMonitor.addBulletMonitoring(bullet);
     }
 }
 
@@ -36,13 +35,12 @@ function startGame() {
     if (outerSpace == undefined)
         return;
 
+    //start the collision monitor
+    _collisionMonitor = new CollisionMonitor(outerSpace.clientWidth, outerSpace.clientHeight, outerSpace);
+    _collisionMonitor.start();
+
     //add space craft
     _spaceCraft.fly(outerSpace);
-
-    //start the collision monitor
-    _collisionMonitor = new CollisionMonitor(outerSpace.clientWidth, outerSpace.clientHeight);
-    _collisionMonitor.addSpaceCraftMonitor(_spaceCraft);
-    _collisionMonitor.start();
 
     //start the aliens generation
     generateAlien(outerSpace);
@@ -52,12 +50,11 @@ function startGame() {
 function generateAlien(outerSpace : HTMLDivElement){
     let alien = new Alien();
     alien.invade(outerSpace);
-    _collisionMonitor.addAlienMonitoring(alien);
 }
 
 
 document.getElementById('outerSpace')?.addEventListener('keydown', keyDownHandler);
-startGame()
+startGame();
 
 
 

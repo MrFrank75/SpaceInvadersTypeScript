@@ -1,66 +1,55 @@
 class CollisionMonitor {
-    updateBulletPosition(row: number, col: number) {
-        throw new Error("Method not implemented.");
-    }
-
-    private _spacecraft : Spacecraft | undefined;
-    private _bulletsFlyingAround : Array<Bullet> = new Array<Bullet>(0);
-    private _aliensFlyingAround : Array<Alien> = new Array<Alien>(0);
-    private _collisionMatrix : Array<Array<number>>;
+    
+    private _bulletMatrix : boolean[][];
+    private _aliensMatrix : boolean[][];
+    private _collisionTable? : CollisionTable;
+    private readonly DENSITY : number = 50;
     
     /**
      *
      */
-    constructor(outerSpaceWidth : number, outerSpaceHeight : number) {
-        
-        this._collisionMatrix = new Array<Array<number>>(outerSpaceHeight);
-        for (let index = 0; index < this._collisionMatrix.length; index++) {
-            this._collisionMatrix[index] = new Array<number>(outerSpaceWidth);
+    constructor(outerSpaceWidth : number, outerSpaceHeight : number, outerSpace? : HTMLDivElement ) {
+        this._bulletMatrix = new Array(outerSpaceHeight)
+        .fill(false)
+        .map(() => new Array(outerSpaceWidth).fill(false));
+
+        this._aliensMatrix = new Array(outerSpaceHeight)
+        .fill(false)
+        .map(() => new Array(outerSpaceWidth).fill(false));
+
+        if (typeof outerSpace !== 'undefined') {
+            let rows : number = Math.round(outerSpaceHeight / this.DENSITY);
+            let columns : number = Math.round(outerSpaceWidth / this.DENSITY);
+            this._collisionTable = new CollisionTable(outerSpace, rows, columns);
         }
     }
 
-    addAlienMonitoring(alien: Alien) {
-        this._aliensFlyingAround.push(alien);
-    }
+
     start() {
+        this._collisionTable?.generateTable();
         setInterval(this.monitorCollision, 500, this);
     }
-    addSpaceCraftMonitor(spaceCraft: Spacecraft) {
-        this._spacecraft = spaceCraft;
+
+    updateBulletPosition(prevX: number, newX: number, prevY : number, newY : number) {
+        this._bulletMatrix[prevY][prevX] = false; 
+        this._bulletMatrix[newY][newX] = true;
+
+        let collMatrixX = newX%this.DENSITY;
+        let collMatrixY = newY%this.DENSITY;
+
+        if (this._collisionTable!=undefined)
+            this._collisionTable?.highlight(collMatrixX,collMatrixY);
     }
-    
-    addBulletMonitoring(bullet: Bullet) {
-        this._bulletsFlyingAround.push(bullet);
+
+    updateAlienPosition(prevX: number, newX: number, prevY : number, newY : number) {
+        this._aliensMatrix[prevY][prevX] = false; 
+        this._aliensMatrix[newY][newX] = true; 
     }
 
     private monitorCollision(cm : CollisionMonitor){
-        let numOfAliens = cm._aliensFlyingAround.length;
-        let numOfBullets = cm._bulletsFlyingAround.length;
-        console.log(`Monitoring ${numOfAliens} aliens and ${numOfBullets} bullets... `);
-
-        //reset the matrix
-        for (let idxRow = 0; idxRow < cm._collisionMatrix.length; idxRow++) {
-            for (let idxCol = 0; idxCol < cm._collisionMatrix[idxRow].length; idxCol++) {
-                cm._collisionMatrix[idxRow][idxCol] = 0;
-            }
-        }
-        
-        //place the bullets
-        cm._bulletsFlyingAround.forEach(element => {
-            var rowCollisionMatrix : number = element.topPosition;
-            var columnCollisionMatrix : number = element.leftPosition;
-            cm._collisionMatrix[rowCollisionMatrix][columnCollisionMatrix] = 1;
-        });
-        
-        //check the aliens
-        cm._aliensFlyingAround.forEach( alien => {
-            var rowCollisionMatrix : number = alien.topPosition;
-            var columnCollisionMatrix : number = alien.leftPosition;
-            
-            if (cm._collisionMatrix[rowCollisionMatrix][columnCollisionMatrix] == 1){
-                console.log(`Position [${rowCollisionMatrix}][${columnCollisionMatrix}] YOU HIT IT!`);
-            }
-        });
+        //refresh the matrix for now
+        this._collisionTable?.highlight(2,20);
     }
 
 }
+
