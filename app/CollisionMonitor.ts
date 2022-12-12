@@ -46,22 +46,27 @@ class CollisionMonitor {
 
 
     start() {
-        this._collisionTable?.generateTable();
-        setInterval(this.monitorCollision, 500, this);
+        setInterval(this.monitorCollision, 200, this);
     }
 
     addSpaceCraftMonitor(spaceCraft: Spacecraft) {
         this._spacecraft = spaceCraft;
     }
 
-    updateAlienPosition(prevX: number, newX: number, prevY : number, newY : number) {
-        this._aliensMatrix[prevY][prevX] = false; 
-        this._aliensMatrix[newY][newX] = true; 
+    addAlienMonitoring(alien: Alien) {
+        this._aliensFlyingAround.push(alien);
     }
+    
+    addBulletMonitoring(bullet: Bullet) {
+        this._bulletsFlyingAround.push(bullet);
+    }
+    
 
     private monitorCollision(cm : CollisionMonitor){
         let numOfAliens = cm._aliensFlyingAround.length;
         let numOfBullets = cm._bulletsFlyingAround.length;
+
+        console.log("Monitoring collision....");
 
         //reset the matrix
         for (let idxRow = 0; idxRow < cm._collisionMatrix.length; idxRow++) {

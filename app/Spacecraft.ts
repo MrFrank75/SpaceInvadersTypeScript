@@ -54,7 +54,7 @@ class Spacecraft {
         }
     }
 
-    public shoot (outerSpace : HTMLDivElement, collisionMonitor : CollisionMonitor) : Bullet {
+    public shoot (outerSpace : HTMLDivElement) : Bullet {
 
             if (this.graphicElement==undefined)
                 throw new Error('Something bad happened');
@@ -63,7 +63,7 @@ class Spacecraft {
             let leftPos : number = (this.graphicElement.offsetLeft+(scWidth/2));
             let topPos : number = this.graphicElement.offsetTop;
         
-            let bulletObject = new Bullet(outerSpace, leftPos, topPos, collisionMonitor);
+            let bulletObject = new Bullet(outerSpace, leftPos, topPos);
             bulletObject.shoot();
 
             return bulletObject;

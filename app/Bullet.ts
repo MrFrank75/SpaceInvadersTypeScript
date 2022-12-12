@@ -19,17 +19,13 @@ class Bullet {
     }
    
     shoot() {
-        let bulletSlowness = 500; //the higher the slower
+        let bulletSlowness = 200; //the higher the slower
         this.moveTimer = setInterval(this.moveBullet,bulletSlowness, this.graphicElement, this);
     }
 
     private removeBullet(){
         clearInterval(this.moveTimer);
         this.graphicElement?.remove();
-    }
-
-    private updatePosition(prevX : number, newX: number, prevY : number, newY : number){
-        this._collisionMonitor.updateBulletPosition(prevX,newX, prevY, newY);
     }
 
     private moveBullet(bullet : HTMLDivElement, refToBullet : Bullet){
