@@ -28,6 +28,10 @@ class Bullet {
         this.graphicElement?.remove();
     }
 
+    private updatePosition(prevX : number, newX: number, prevY : number, newY : number){
+        this._collisionMonitor.updateBulletPosition(prevX,newX, prevY, newY);
+    }
+
     private moveBullet(bullet : HTMLDivElement, refToBullet : Bullet){
         let bulletPosition : number = bullet.offsetTop;
         if (bulletPosition>0){

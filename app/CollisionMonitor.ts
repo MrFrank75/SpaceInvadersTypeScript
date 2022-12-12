@@ -44,19 +44,19 @@ class CollisionMonitor {
         }
     }
 
-    addAlienMonitoring(alien: Alien) {
-        this._aliensFlyingAround.push(alien);
-    }
+
     start() {
+        this._collisionTable?.generateTable();
         setInterval(this.monitorCollision, 500, this);
     }
 
     addSpaceCraftMonitor(spaceCraft: Spacecraft) {
         this._spacecraft = spaceCraft;
     }
-    
-    addBulletMonitoring(bullet: Bullet) {
-        this._bulletsFlyingAround.push(bullet);
+
+    updateAlienPosition(prevX: number, newX: number, prevY : number, newY : number) {
+        this._aliensMatrix[prevY][prevX] = false; 
+        this._aliensMatrix[newY][newX] = true; 
     }
 
     private monitorCollision(cm : CollisionMonitor){
@@ -91,3 +91,4 @@ class CollisionMonitor {
     }
 
 }
+

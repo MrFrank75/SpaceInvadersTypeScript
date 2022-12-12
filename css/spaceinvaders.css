@@ -5,6 +5,32 @@
     border: 3px solid #73AD21;
 }
 
+
+.collisionMatrix{
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    border: 3px solid #333;
+    position: absolute;
+}
+
+.collisionMatrixCellA
+{
+    background-color: gray;
+}
+
+.collisionMatrixCellB
+{
+    background-color: lightgray;
+}
+
+.collisionMatrixHighlight
+{
+    background-color: fuchsia;
+}
+
+
 .spacecraft{
     width: 100px;
     height: 100px;

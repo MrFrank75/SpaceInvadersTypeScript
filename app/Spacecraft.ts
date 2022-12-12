@@ -63,7 +63,7 @@ class Spacecraft {
             let leftPos : number = (this.graphicElement.offsetLeft+(scWidth/2));
             let topPos : number = this.graphicElement.offsetTop;
         
-            let bulletObject = new Bullet(outerSpace, leftPos, topPos);
+            let bulletObject = new Bullet(outerSpace, leftPos, topPos, collisionMonitor);
             bulletObject.shoot();
 
             return bulletObject;
