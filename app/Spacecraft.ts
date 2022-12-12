@@ -4,14 +4,10 @@ class Spacecraft {
 
     private readonly SpacecraftCssClass = 'spacecraft';
     private graphicElement: HTMLDivElement | undefined;
-    private outerSpaceWidth : number;
-    private outerSpaceHeight : number;
 
     private readonly MOVEMENT_LENGTH_PX = 20;
 
     constructor() {
-        this.outerSpaceHeight = 0;
-        this.outerSpaceWidth = 0;
     }
    
 
@@ -30,8 +26,6 @@ class Spacecraft {
     
     fly(outerSpace : HTMLDivElement) {
         this.graphicElement = this.createSpacecraftDivElement(outerSpace);
-        this.outerSpaceHeight = outerSpace.clientHeight;
-        this.outerSpaceWidth = outerSpace.clientWidth;
     }
 
     moveit(event : KeyboardEvent){
@@ -60,10 +54,10 @@ class Spacecraft {
         }
     }
 
-    public shoot (outerSpace : HTMLDivElement) : Bullet | undefined {
+    public shoot (outerSpace : HTMLDivElement, collisionMonitor : CollisionMonitor) : Bullet {
 
             if (this.graphicElement==undefined)
-                return undefined;
+                throw new Error('Something bad happened');
 
             let scWidth : number = this.graphicElement?.offsetWidth as number; 
             let leftPos : number = (this.graphicElement.offsetLeft+(scWidth/2));

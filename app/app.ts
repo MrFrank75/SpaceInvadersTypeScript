@@ -22,7 +22,7 @@ function keyDownHandler(event: KeyboardEvent) : void {
         let outerSpace : HTMLDivElement | null = document.getElementById('outerSpace') as HTMLDivElement;
         if (outerSpace == undefined)
             return;
-        let bullet : Bullet | undefined =_spaceCraft.shoot(outerSpace);
+        let bullet : Bullet | undefined =_spaceCraft.shoot(outerSpace, _collisionMonitor);
         if (bullet == undefined)
             return;
 
@@ -36,17 +36,21 @@ function startGame() {
     if (outerSpace == undefined)
         return;
 
-    //add space craft
-    _spaceCraft.fly(outerSpace);
+
 
     //start the collision monitor
-    _collisionMonitor = new CollisionMonitor(outerSpace.clientWidth, outerSpace.clientHeight);
+    console.log(`Start game for rows: ${outerSpace.clientHeight} - columns: ${outerSpace.clientWidth}`);
+    _collisionMonitor = new CollisionMonitor(outerSpace.clientHeight, outerSpace.clientWidth);
+    _collisionMonitor.designCollisionGrid(outerSpace);
     _collisionMonitor.addSpaceCraftMonitor(_spaceCraft);
     _collisionMonitor.start();
 
+    //add space craft
+    _spaceCraft.fly(outerSpace);
+
     //start the aliens generation
     generateAlien(outerSpace);
-    //setInterval(generateAlien, 2000, outerSpace);
+    setInterval(generateAlien, 2000, outerSpace);
 }
 
 function generateAlien(outerSpace : HTMLDivElement){

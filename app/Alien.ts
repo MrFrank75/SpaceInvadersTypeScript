@@ -1,30 +1,33 @@
 class Alien {
     private graphicElement: HTMLDivElement | undefined;
     private moveTimer : NodeJS.Timer | undefined;
+
     private outerSpaceWidth : number;
     private outerSpaceHeight : number;
 
     private readonly AlienCssClass = 'alien';
     
-    private _topPosition : number;
-    private _leftPosition : number;
-
     private readonly MOVEMENT_SIZE_PX = 10;
     private readonly MOVEMENT_FREQUENCY_MS = 2000;
+    private _numberOfFlashes: number = 0;
+    private _isAlive: boolean = true;
+
+
+    public get IsAlive() : boolean {
+        return this._isAlive;
+    }
 
     public get topPosition() : number {
-        return this._topPosition;
+        return this.graphicElement?.offsetTop as number;
     }
 
     public get leftPosition() : number {
-        return this._leftPosition;
+        return this.graphicElement?.offsetLeft as number;
     }
 
     constructor() {
         this.outerSpaceHeight = 0;
         this.outerSpaceWidth = 0;
-        this._topPosition = 0
-        this._leftPosition = 0;
     }
    
     invade(outerSpace : HTMLElement) {
@@ -36,14 +39,39 @@ class Alien {
         this.moveTimer = setInterval(this.moveAlien,alienSlowness, this.graphicElement, this);
     }
 
+    kill(){
+        console.log("Killed the alien");
+        this._isAlive = false;
+        setTimeout(this.flashAlien,100, this);       
+    }
+
+    private flashAlien(refToAlien : Alien){
+        refToAlien._numberOfFlashes += 1;
+        console.log(`Flashing alien ${refToAlien._numberOfFlashes}`);
+        if (refToAlien._numberOfFlashes>10){
+            refToAlien.removeAlien();
+        }
+        else{
+            if (refToAlien.graphicElement==undefined)
+                return;
+            if (refToAlien.graphicElement.style.background == "red")
+                refToAlien.graphicElement.style.background = "black";
+            else
+                refToAlien.graphicElement.style.background = "red";
+            ;
+            setTimeout(refToAlien.flashAlien, 100, refToAlien);
+        }
+
+    }
+
     private removeAlien(){
         clearInterval(this.moveTimer);
         this.graphicElement?.remove();
+
     }
 
     private moveAlien(alien : HTMLDivElement, refToAlien : Alien){
         let alienPosition : number = alien.offsetTop;
-        console.log('Moving alien');
         if (alienPosition<refToAlien.outerSpaceHeight){
             alienPosition+=refToAlien.MOVEMENT_SIZE_PX;
             alien.style.top = alienPosition.toString();
