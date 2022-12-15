@@ -7,7 +7,8 @@
 var _spaceCraft = new Spacecraft();
 var _alienGeneratorTimer : NodeJS.Timer | undefined;
 var _collisionMonitor : CollisionMonitor;
-    
+const TILE_SIZE_FACTOR : number = 20; //if 1, then we use exactly the same density as the screen resolution
+
 function keyDownHandler(event: KeyboardEvent) : void {
     console.log(event.code);
  //   let outerSpace: HTMLDivElement = document.getElementById('outerSpace') as HTMLDivElement;
@@ -38,7 +39,7 @@ function startGame() {
         
     //start the collision monitor
     console.log(`Start game for rows: ${outerSpace.clientHeight} - columns: ${outerSpace.clientWidth}`);
-    _collisionMonitor = new CollisionMonitor(outerSpace.clientHeight, outerSpace.clientWidth);
+    _collisionMonitor = new CollisionMonitor(outerSpace.clientHeight, outerSpace.clientWidth, TILE_SIZE_FACTOR);
     _collisionMonitor.designCollisionGrid(outerSpace);
     _collisionMonitor.addSpaceCraftMonitor(_spaceCraft);
     _collisionMonitor.start();
@@ -52,7 +53,7 @@ function startGame() {
 }
 
 function generateAlien(outerSpace : HTMLDivElement, cm : CollisionMonitor){
-    let alien = new Alien();
+    let alien = new Alien(TILE_SIZE_FACTOR);
     alien.invade(outerSpace);
     cm.addAlienMonitoring(alien);
 }

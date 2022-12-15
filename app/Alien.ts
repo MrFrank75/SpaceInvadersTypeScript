@@ -11,6 +11,7 @@ class Alien {
     private readonly MOVEMENT_FREQUENCY_MS = 2000;
     private _numberOfFlashes: number = 0;
     private _isAlive: boolean = true;
+    private _tileSizeFactor: number;
 
 
     public get IsAlive() : boolean {
@@ -25,7 +26,8 @@ class Alien {
         return this.graphicElement?.offsetLeft as number;
     }
 
-    constructor() {
+    constructor(tileSize : number) {
+        this._tileSizeFactor = tileSize;
         this.outerSpaceHeight = 0;
         this.outerSpaceWidth = 0;
     }
@@ -73,7 +75,7 @@ class Alien {
     private moveAlien(alien : HTMLDivElement, refToAlien : Alien){
         let alienPosition : number = alien.offsetTop;
         if (alienPosition<refToAlien.outerSpaceHeight){
-            alienPosition+=refToAlien.MOVEMENT_SIZE_PX;
+            alienPosition= (alienPosition + refToAlien.MOVEMENT_SIZE_PX);
             alien.style.top = alienPosition.toString();
         }
         else
@@ -85,7 +87,7 @@ class Alien {
         let alienDiv = outerSpace.ownerDocument.createElement('div');
         alienDiv.className = this.AlienCssClass;
 
-        let initialLeftPos = this.getRandomInt(outerSpace.clientWidth);
+        let initialLeftPos = Math.round(this.getRandomInt(outerSpace.clientWidth) / this._tileSizeFactor)* this._tileSizeFactor;
 
         alienDiv.style.left = initialLeftPos.toString();
         alienDiv.style.top = outerSpace.style.top;

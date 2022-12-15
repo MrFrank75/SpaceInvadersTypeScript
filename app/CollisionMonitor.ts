@@ -5,11 +5,12 @@ class CollisionMonitor {
     private _aliensFlyingAround : Array<Alien> = new Array<Alien>(0);
     private _collisionMatrix : Array<Array<number>>;
     private _collisionDisplayGrid : Array<Array<HTMLDivElement>>;
-    private _tileSizeFactor : number = 20; //if 1, then we use exactly the same density as the screen resolution
+    private _tileSizeFactor : number;
     /**
      *
      */
-    constructor(screenResolutionHeight : number, screenResolutionWidth : number) {
+    constructor(screenResolutionHeight : number, screenResolutionWidth : number, tileSizeFactor : number) {
+        this._tileSizeFactor = tileSizeFactor;
         let rows : number = Math.round(screenResolutionHeight / this._tileSizeFactor);
         let columns : number = Math.round(screenResolutionWidth / this._tileSizeFactor);
 
